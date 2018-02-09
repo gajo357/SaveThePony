@@ -1,0 +1,11 @@
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\bin\Debug\netcoreapp2.0\SaveThePony.deps.json
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\bin\Debug\netcoreapp2.0\SaveThePony.runtimeconfig.json
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\bin\Debug\netcoreapp2.0\SaveThePony.runtimeconfig.dev.json
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\bin\Debug\netcoreapp2.0\SaveThePony.dll
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\bin\Debug\netcoreapp2.0\SaveThePony.pdb
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\Debug\netcoreapp2.0\SaveThePony.csprojResolveAssemblyReference.cache
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\Debug\netcoreapp2.0\SaveThePony.csproj.CoreCompileInputs.cache
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\Debug\netcoreapp2.0\SaveThePony.AssemblyInfoInputs.cache
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\Debug\netcoreapp2.0\SaveThePony.AssemblyInfo.cs
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\Debug\netcoreapp2.0\SaveThePony.dll
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\Debug\netcoreapp2.0\SaveThePony.pdb

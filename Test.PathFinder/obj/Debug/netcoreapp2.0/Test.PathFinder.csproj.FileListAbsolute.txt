@@ -1,0 +1,16 @@
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\Test.PathFinder.deps.json
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\Test.PathFinder.runtimeconfig.json
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\Test.PathFinder.runtimeconfig.dev.json
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\Test.PathFinder.dll
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\Test.PathFinder.pdb
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\PathFinder.dll
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\bin\Debug\netcoreapp2.0\PathFinder.pdb
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\obj\Debug\netcoreapp2.0\Test.PathFinder.csprojResolveAssemblyReference.cache
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\obj\Debug\netcoreapp2.0\Test.PathFinder.csproj.CoreCompileInputs.cache
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\obj\Debug\netcoreapp2.0\Test.PathFinder.AssemblyInfoInputs.cache
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\obj\Debug\netcoreapp2.0\Test.PathFinder.AssemblyInfo.cs
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\obj\Debug\netcoreapp2.0\Test.PathFinder.dll
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\Test.PathFinder\obj\Debug\netcoreapp2.0\Test.PathFinder.pdb
