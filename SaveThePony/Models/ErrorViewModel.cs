@@ -1,5 +1,3 @@
-using System;
-
 namespace SaveThePony.Models
 {
     public class ErrorViewModel

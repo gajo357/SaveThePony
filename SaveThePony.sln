@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaveThePony", "SaveThePony\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PathFinder", "PathFinder\PathFinder.csproj", "{E585E891-8F0D-47B5-8326-407DCCAC588F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.PathFinder", "Test.PathFinder\Test.PathFinder.csproj", "{9CBA6E18-B525-4A55-BBD7-640898E9E25E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.PathFinder", "Test.PathFinder\Test.PathFinder.csproj", "{9CBA6E18-B525-4A55-BBD7-640898E9E25E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

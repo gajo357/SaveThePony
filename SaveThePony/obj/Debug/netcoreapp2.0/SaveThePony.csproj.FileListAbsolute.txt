@@ -9,3 +9,5 @@ C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\
 C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\Debug\netcoreapp2.0\SaveThePony.AssemblyInfo.cs
 C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\Debug\netcoreapp2.0\SaveThePony.dll
 C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\obj\Debug\netcoreapp2.0\SaveThePony.pdb
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\bin\Debug\netcoreapp2.0\PathFinder.dll
+C:\Users\Gajo\Documents\Visual Studio 2017\Projects\SaveThePony\SaveThePony\bin\Debug\netcoreapp2.0\PathFinder.pdb

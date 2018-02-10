@@ -4746,6 +4746,16 @@
         "runtime": {
           "lib/netstandard1.3/Microsoft.WindowsAzure.Storage.dll": {}
         }
+      },
+      "PathFinder/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.0",
+        "compile": {
+          "bin/placeholder/PathFinder.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PathFinder.dll": {}
+        }
       }
     }
   },
@@ -12526,12 +12536,19 @@
         "windowsazure.storage.8.1.4.nupkg.sha512",
         "windowsazure.storage.nuspec"
       ]
+    },
+    "PathFinder/1.0.0": {
+      "type": "project",
+      "path": "../PathFinder/PathFinder.csproj",
+      "msbuildProject": "../PathFinder/PathFinder.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
       "Microsoft.AspNetCore.All >= 2.0.5",
-      "Microsoft.NETCore.App >= 2.0.0"
+      "Microsoft.AspNetCore.Mvc.Formatters.Json >= 2.0.2",
+      "Microsoft.NETCore.App >= 2.0.0",
+      "PathFinder >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -12569,7 +12586,11 @@
       },
       "frameworks": {
         "netcoreapp2.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Gajo\\Documents\\Visual Studio 2017\\Projects\\SaveThePony\\PathFinder\\PathFinder.csproj": {
+              "projectPath": "C:\\Users\\Gajo\\Documents\\Visual Studio 2017\\Projects\\SaveThePony\\PathFinder\\PathFinder.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -12584,6 +12605,10 @@
           "Microsoft.AspNetCore.All": {
             "target": "Package",
             "version": "[2.0.5, )"
+          },
+          "Microsoft.AspNetCore.Mvc.Formatters.Json": {
+            "target": "Package",
+            "version": "[2.0.2, )"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",
