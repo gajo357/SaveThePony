@@ -18,7 +18,13 @@ namespace SaveThePony.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var model = new IndexModel();
+            var model = new IndexModel()
+            {
+                PonyName = "Applejack",
+                Width = 25,
+                Height = 25,
+                Difficulty = 10
+            };
 
             return View(model);
         }
@@ -29,74 +35,24 @@ namespace SaveThePony.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await MazeService.CreateNewGameAsync(model))
-                    return RedirectToAction(CurrentGameActionName);
+                await MazeService.CreateAndRunGameAsync(model);
             }
 
             return View(model);
         }
 
-        private const string CurrentGameActionName = "CurrentGame";
-        [ActionName(CurrentGameActionName)]
-        [HttpGet]
-        public async Task<IActionResult> CurrentGameAsync()
-        {
-            var model = await MazeService.GetCurrentMazeAsync();
-            if (model == null)
-                return RedirectToAction(nameof(Index));
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> PostFastForwardAsync(IndexModel model)
-        {
-            await MazeService.FastForwardAsync(model);
-
-            return RedirectToAction(CurrentGameActionName);
-            //return await CurrentGameAsync();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> PostNorthAsync(IndexModel model)
-        {
-            await MazeService.MoveAsync(model, DirectionsEnum.North);
-
-            return RedirectToAction(CurrentGameActionName);
-            //return await CurrentGameAsync();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> PostSouthAsync(IndexModel model)
-        {
-            await MazeService.MoveAsync(model, DirectionsEnum.South);
-
-            return RedirectToAction(CurrentGameActionName);
-            //return await CurrentGameAsync();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> PostEastAsync(IndexModel model)
-        {
-            await MazeService.MoveAsync(model, DirectionsEnum.East);
-
-            return RedirectToAction(CurrentGameActionName);
-            //return await CurrentGameAsync();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> PostWestAsync(IndexModel model)
-        {
-            await MazeService.MoveAsync(model, DirectionsEnum.West);
-
-            return RedirectToAction(CurrentGameActionName);
-            //return await CurrentGameAsync();
-        }
-
         [HttpGet]
         public IActionResult Contact()
         {
-            return View();
+            var model = new ContactModel()
+            {
+                Name = "John Smith",
+                Github = @"https://github.com/",
+                StackOverflow = @"https://stackoverflow.com/",
+                LinkedIn = @"https://www.linkedin.com/"
+            };
+
+            return View(model);
         }
 
         public IActionResult Error()

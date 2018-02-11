@@ -25,16 +25,12 @@ namespace SaveThePony.Models
         /// <summary>
         /// Contains some info for the user, fx next step, steps to end, steps to domokun
         /// </summary>
-        public string Message { get; set; }
+        public List<string> Messages { get; set; }
+        
         /// <summary>
         /// Represents the printout of the maze
         /// </summary>
         public string Maze { get; set; }
-
-        public DirectionsEnum NextMove { get; set; }
-
-        public DirectionsEnum AllowedMoves { get; set; }
-
-        public int FastForwardSteps { get; set; }
+        public string Prize { get; internal set; }
     }
 }

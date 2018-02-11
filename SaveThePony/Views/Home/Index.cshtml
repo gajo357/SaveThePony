@@ -4,40 +4,54 @@
     ViewData["Title"] = "Save the Pony";
 }
 
-<div>
-    @using (Html.BeginForm())
-    {
-        @Html.ValidationSummary(true)
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(m => m.PonyName, new { @class = "control-label" })
-                    @Html.TextBoxFor(m => m.PonyName)
-                    @Html.ValidationMessageFor(m => m.PonyName)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Width, new { @class = "control-label" })
-                    @Html.TextBoxFor(m => m.Width)
-                    @Html.ValidationMessageFor(m => m.Width)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Height, new { @class = "control-label" })
-                    @Html.TextBoxFor(m => m.Height)
-                    @Html.ValidationMessageFor(m => m.Height)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Difficulty, new { @class = "control-label" })
-                    @Html.TextBoxFor(m => m.Difficulty)
-                    @Html.ValidationMessageFor(m => m.Difficulty)
-                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(m => m.PonyName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.PonyName)
+                @Html.ValidationMessageFor(m => m.PonyName)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Width, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Width)
+                @Html.ValidationMessageFor(m => m.Width)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Height, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Height)
+                @Html.ValidationMessageFor(m => m.Height)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Difficulty, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Difficulty)
+                @Html.ValidationMessageFor(m => m.Difficulty)
             </div>
         </div>
+    </div>
 
-        <div class="col-md-12">
-            <div class="pad-top">
-                <input type="submit" asp-controller="Home" asp-action="@nameof(HomeController.Index)" value="Start new game" />
-            </div>
+    <div class="col-md-12">
+        <div class="pad-top">
+            <input type="submit" asp-controller="Home" asp-action="@nameof(HomeController.Index)" value="Start new game" />
         </div>
-    }
-</div>
+    </div>
+}
+
+@if (Model.Messages != null && Model.Messages.Any())
+{
+    <div class="col-md-12">
+        @foreach (var message in Model.Messages)
+        {
+            <h1>@message</h1>
+        }
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.Prize))
+{
+    <div class="col-md-12">
+        <a href="@Model.Prize">Collect your prize</a>
+    </div>
+}

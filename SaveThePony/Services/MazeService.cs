@@ -15,7 +15,8 @@ namespace SaveThePony.Services
         private IPathFinderService PathFinderService { get; }
         private HttpClient HttpClient { get; }
 
-        private string BaseWebsite = @"https://ponychallenge.trustpilot.com/pony-challenge/maze";
+        private const string BaseWebsite = @"https://ponychallenge.trustpilot.com";
+        private const string ApiBaseWebsite = BaseWebsite + @"/pony-challenge/maze";
 
         public MazeService(IPathFinderService pathFinderService)
         {
@@ -24,29 +25,23 @@ namespace SaveThePony.Services
             HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        private IndexModel CurrentIndexModel { get; set; }
-        private Solution CurrentSolution { get; set; }
-
-        public async Task<IndexModel> GetCurrentMazeAsync()
+        public async Task<bool> CreateAndRunGameAsync(IndexModel model)
         {
-            if (CurrentIndexModel == null)
+            if(!await CreateGameAsync(model))
+                return false;
+
+            var solution = await Task.Run(() => CreateNetworkFromMaze(model));
+            if (solution == null)
             {
-                // we need to create a new
-                return null;
-            }
-            else if (!string.IsNullOrEmpty(CurrentIndexModel.MazeId))
-            {
-                await PopulateCurrentStateAsync(CurrentIndexModel);
+                model.Messages = new List<string>() { "Could not find a solution for the maze" };
+                return false;
             }
 
-            return CurrentIndexModel;
+            return await FastForwardAsync(model, solution);
         }
 
-        public async Task<bool> CreateNewGameAsync(IndexModel model)
+        private async Task<bool> CreateGameAsync(IndexModel model)
         {
-            CurrentIndexModel = null;
-            CurrentSolution = null;
-
             var mazePattern = new MazeTemplate()
             {
                 Width = model.Width,
@@ -56,43 +51,38 @@ namespace SaveThePony.Services
             };
 
             var mazeSpeck = JsonConvert.SerializeObject(mazePattern);
-
-            var response = await HttpClient.PostAsync(BaseWebsite, new StringContent(mazeSpeck, Encoding.UTF8, "application/json"));
+            var response = await HttpClient.PostAsync(ApiBaseWebsite, new StringContent(mazeSpeck, Encoding.UTF8, "application/json"));
+            var content = await response.Content.ReadAsStringAsync();
+            var maze = JsonConvert.DeserializeObject<MazeModel>(content);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                var maze = JsonConvert.DeserializeObject<MazeModel>(content);
                 model.MazeId = maze.MazeId;
 
                 await PopulateCurrentStateAsync(model);
-
-                CurrentIndexModel = model;
-
                 return true;
             }
+
+            model.Messages = new List<string>();
+            model.Messages.Add(maze.GameState.State);
+            model.Messages.Add(maze.GameState.StateResult);
 
             return false;
         }
 
-        public async Task<bool> FastForwardAsync(IndexModel model)
+        private async Task<bool> FastForwardAsync(IndexModel model, Solution solution)
         {
-            var solution = CurrentSolution;
-            model.MazeId = CurrentIndexModel.MazeId;
-
-            var i = 0;
             foreach (var step in solution.MovesToEnd.Values)
             {
-                if (i++ >= model.FastForwardSteps)
-                    break;
-
                 var response = await MoveAsync(model.MazeId, step);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var state = JsonConvert.DeserializeObject<GameState>(content);
 
-                    model.Message = state.StateResult;
+                    model.Messages = new List<string>();
+                    model.Messages.Add(state.State);
+                    model.Messages.Add(state.StateResult);
 
                     return false;
                 }
@@ -100,29 +90,7 @@ namespace SaveThePony.Services
 
             await PopulateCurrentStateAsync(model);
 
-            CurrentIndexModel = model;
-
             return true;
-        }
-
-        public async Task<bool> MoveAsync(IndexModel model, DirectionsEnum direction)
-        {
-            model.MazeId = CurrentIndexModel.MazeId;
-
-            var response = await MoveAsync(model.MazeId, direction);
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                CurrentSolution = null;
-
-                await PopulateCurrentStateAsync(model);
-
-                CurrentIndexModel = model;
-
-                return true;
-            }
-
-            return false;
         }
 
         private async Task<HttpResponseMessage> MoveAsync(string mazeId, DirectionsEnum direction)
@@ -134,27 +102,24 @@ namespace SaveThePony.Services
 
             var content = JsonConvert.SerializeObject(template);
 
-            return await HttpClient.PostAsync($"{BaseWebsite}/{mazeId}", new StringContent(content, Encoding.UTF8, "application/json"));
+            return await HttpClient.PostAsync($"{ApiBaseWebsite}/{mazeId}", new StringContent(content, Encoding.UTF8, "application/json"));
         }
 
-        private async Task PopulateCurrentStateAsync(IndexModel indexModel)
+        private async Task PopulateCurrentStateAsync(IndexModel model)
         {
-            var mazeTask = GetCurrentMazeState(indexModel.MazeId);
-            var printTask = GetMazePrintStringAsync(indexModel.MazeId);
+            var mazeTask = GetCurrentMazeState(model.MazeId);
+            //var printTask = GetMazePrintStringAsync(model.MazeId);
 
             var maze = await mazeTask;
-            var print = await printTask;
+            //var print = await printTask;
 
-            PopulateIndexModelFromMaze(indexModel, maze, print);
-
-            var solution = await FindMazeSolutionAsync(indexModel);
-
-            PopulateIndexModelFromSolution(indexModel, solution);
+            PopulateIndexModelFromMaze(model, maze);
+            //model.Maze = print;
         }
 
         private async Task<MazeModel> GetCurrentMazeState(string mazeId)
         {
-            var response = await HttpClient.GetAsync($"{BaseWebsite}/{mazeId}");
+            var response = await HttpClient.GetAsync($"{ApiBaseWebsite}/{mazeId}");
             var mazeContent = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<MazeModel>(mazeContent);
@@ -162,18 +127,9 @@ namespace SaveThePony.Services
 
         private async Task<string> GetMazePrintStringAsync(string mazeId)
         {
-            var printResponse = await HttpClient.GetAsync($"{BaseWebsite}/{mazeId}/print");
+            var printResponse = await HttpClient.GetAsync($"{ApiBaseWebsite}/{mazeId}/print");
 
             return await printResponse.Content.ReadAsStringAsync();
-        }
-
-        private async Task<Solution> FindMazeSolutionAsync(IndexModel model)
-        {
-            var solution = await Task.Run(() => CreateNetworkFromMaze(model));
-
-            CurrentSolution = solution;
-
-            return solution;
         }
 
         private Solution CreateNetworkFromMaze(IndexModel model)
@@ -224,31 +180,15 @@ namespace SaveThePony.Services
             var path = PathFinderService.FindShortestPath(network, startNode, endNode);
 
             var moves = ConvertPathToMoves(path, model.Height, model.Width);
-            var nextMove = moves[startNode.Id];
             var domokun = path.IndexOf(domokunNode);
             var movesToEnd = path.Count - 1;
-            var allowedMoves = GetAllowedMoves(startNode, network.GetNodeConnections(startNode), model.Height, model.Width);
 
             return new Solution()
             {
                 NoMovesToDomokun = domokun,
                 NoMovesToEnd = movesToEnd,
                 MovesToEnd = moves,
-                NextMove = nextMove,
-                AllowedMoves = allowedMoves
             };
-        }
-
-        private DirectionsEnum GetAllowedMoves(Node startNode, IEnumerable<Node> connections, int noRows, int noColumns)
-        {
-            var allowedMoves = DirectionsEnum.None;
-            foreach(var node in connections)
-            {
-                var direction = GetDirectionBetweenNodes(startNode.Id, node.Id, noRows, noColumns);
-                allowedMoves |= direction;
-            }
-
-            return allowedMoves;
         }
 
         private IDictionary<int, DirectionsEnum> ConvertPathToMoves(IList<Node> path, int height, int width)
@@ -298,39 +238,29 @@ namespace SaveThePony.Services
             return column + row * noColumns;
         }
 
-        private static void PopulateIndexModelFromMaze(IndexModel indexModel, MazeModel maze, string print)
+        private void PopulateIndexModelFromMaze(IndexModel model, MazeModel maze)
         {
-            indexModel.Difficulty = maze.Difficulty;
-            indexModel.Height = maze.Size[0];
-            indexModel.Width = maze.Size[1];
-            indexModel.Walls = maze.Data;
-            indexModel.Pony = maze.Pony[0];
-            indexModel.Domokun = maze.Domokun[0];
-            indexModel.EndPoint = maze.EndPoint[0];
+            model.Difficulty = maze.Difficulty;
+            model.Height = maze.Size[0];
+            model.Width = maze.Size[1];
+            model.Walls = maze.Data;
+            model.Pony = maze.Pony[0];
+            model.Domokun = maze.Domokun[0];
+            model.EndPoint = maze.EndPoint[0];
 
-            indexModel.Maze = print;
+            model.Messages = new List<string>();
+            model.Messages.Add(maze.GameState.StateResult);
+
+            if (!string.IsNullOrEmpty(maze.GameState.HiddenUrl))
+                model.Prize = $"{BaseWebsite}/{maze.GameState.HiddenUrl}";
         }
-
-        private static void PopulateIndexModelFromSolution(IndexModel model, Solution solution)
-        {
-            var message = new StringBuilder();
-            message.AppendLine($"Number of moves to Domokun: {solution.NoMovesToDomokun}");
-            message.AppendLine($"Number of moves to the Exit: {solution.NoMovesToEnd}");
-            message.AppendLine($"Your next move should be: {solution.NextMove}");
-
-            model.Message = message.ToString();
-            model.NextMove = solution.NextMove;
-            model.AllowedMoves = solution.AllowedMoves;
-        }
-
+        
         private class Solution
         {
             public int NoMovesToDomokun { get; set; }
             public int NoMovesToEnd { get; set; }
-            public DirectionsEnum NextMove { get; set; }
 
             public IDictionary<int, DirectionsEnum> MovesToEnd { get; set; }
-            public DirectionsEnum AllowedMoves { get; internal set; }
         }
     }
 }
