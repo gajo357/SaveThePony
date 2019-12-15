@@ -6,8 +6,8 @@ namespace PathFinder.Models
 {
     public class Network
     {
-        private IDictionary<int, Node> _nodesDictionary = new Dictionary<int, Node>();
-        private IDictionary<Node, IDictionary<Node, int>> _network = new Dictionary<Node, IDictionary<Node, int>>();
+        private readonly IDictionary<int, Node> _nodesDictionary = new Dictionary<int, Node>();
+        private readonly IDictionary<Node, IDictionary<Node, int>> _network = new Dictionary<Node, IDictionary<Node, int>>();
 
         private void MakeLink(Node node1, Node node2, int weight = 1)
         {

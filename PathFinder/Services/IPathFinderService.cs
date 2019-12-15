@@ -5,6 +5,6 @@ namespace PathFinder.Services
 {
     public interface IPathFinderService
     {
-        IList<Node> FindShortestPath(Network network, Node startNode, Node endNode);
+        IReadOnlyList<Node> FindShortestPath(Network network, Node startNode, Node endNode);
     }
 }

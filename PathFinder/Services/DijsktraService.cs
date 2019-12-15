@@ -9,14 +9,14 @@ namespace PathFinder.Services
     /// </summary>
     public class DijsktraService : IPathFinderService
     {
-        public IList<Node> FindShortestPath(Network network, Node startNode, Node endNode)
+        public IReadOnlyList<Node> FindShortestPath(Network network, Node startNode, Node endNode)
         {
             // the heap
             var distancesSoFar = new PathHeap();
             // dictionary to track nodes and distances to them
             var finalDistances = new Dictionary<Node, int>();
             // paths from start node to every other
-            var paths = new Dictionary<Node, IList<Node>>();
+            var paths = new Dictionary<Node, IReadOnlyList<Node>>();
 
             // add the start node to the heap
             distancesSoFar.AddToHeap(startNode);
@@ -55,8 +55,7 @@ namespace PathFinder.Services
                         node.Value = value;
                         distancesSoFar.AddToHeap(node);
 
-                        paths.Add(node, new List<Node>(paths[minNode]));
-                        paths[node].Add(node);
+                        paths.Add(node, new List<Node>(paths[minNode]) { node });
                     }
                     else if (value < node.Value)
                     {
@@ -65,14 +64,13 @@ namespace PathFinder.Services
                         node.Value = value;
                         distancesSoFar.UpHeapify(node.Index);
 
-                        paths[node] = new List<Node>(paths[minNode]);
-                        paths[node].Add(node);
+                        paths[node] = new List<Node>(paths[minNode]) { node };
                     }
                 }
             }
 
             if (!paths.ContainsKey(endNode))
-                return new List<Node>();
+                return new Node[0];
 
             return paths[endNode];
         }

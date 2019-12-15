@@ -3,6 +3,7 @@ using PathFinder.Models;
 using PathFinder.Services;
 using SaveThePony.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -63,9 +64,11 @@ namespace SaveThePony.Services
                 return true;
             }
 
-            model.Messages = new List<string>();
-            model.Messages.Add(maze.GameState.State);
-            model.Messages.Add(maze.GameState.StateResult);
+            model.Messages = new List<string>
+            {
+                maze.GameState.State,
+                maze.GameState.StateResult
+            };
 
             return false;
         }
@@ -177,19 +180,19 @@ namespace SaveThePony.Services
 
             var path = PathFinderService.FindShortestPath(network, startNode, endNode);
 
-            var moves = ConvertPathToMoves(path, model.Height, model.Width);
-            var domokun = path.IndexOf(domokunNode);
+            var moves = ConvertPathToMoves(path, model.Width);
+            var movesToDomokun = path.TakeWhile(n => n.Id != domokunNode.Id).Count();
             var movesToEnd = path.Count - 1;
 
             return new Solution()
             {
-                NoMovesToDomokun = domokun,
+                NoMovesToDomokun = movesToDomokun == movesToEnd ? -1 : movesToDomokun,
                 NoMovesToEnd = movesToEnd,
                 MovesToEnd = moves,
             };
         }
 
-        private IDictionary<int, DirectionsEnum> ConvertPathToMoves(IList<Node> path, int height, int width)
+        private IDictionary<int, DirectionsEnum> ConvertPathToMoves(IReadOnlyList<Node> path, int width)
         {
             var moves = new Dictionary<int, DirectionsEnum>();
 
@@ -197,17 +200,17 @@ namespace SaveThePony.Services
             {
                 var node1 = path[i - 1];
                 var node2 = path[i];
-                var direction = GetDirectionBetweenNodes(node1.Id, node2.Id, height, width);
+                var direction = GetDirectionBetweenNodes(node1.Id, node2.Id, width);
                 moves.Add(node1.Id, direction);
             }
 
             return moves;
         }
 
-        private DirectionsEnum GetDirectionBetweenNodes(int node1, int node2, int noRows, int noColumns)
+        private DirectionsEnum GetDirectionBetweenNodes(int node1, int node2, int noColumns)
         {
-            (int row1, int column1) = GetRowAndColumnFromIndex(node1, noRows, noColumns);
-            (int row2, int column2) = GetRowAndColumnFromIndex(node2, noRows, noColumns);
+            (int row1, int column1) = GetRowAndColumnFromIndex(node1, noColumns);
+            (int row2, int column2) = GetRowAndColumnFromIndex(node2, noColumns);
 
             if (row1 == row2)
             {
@@ -217,24 +220,13 @@ namespace SaveThePony.Services
             return row2 > row1 ? DirectionsEnum.South : DirectionsEnum.North;
         }
 
-        private (int row, int column) GetRowAndColumnFromIndex(int index, int noRows, int noColumns)
+        private (int row, int column) GetRowAndColumnFromIndex(int index, int noColumns)
         {
-            for (var row = 0; row < noRows; row++)
-            {
-                for (var column = 0; column < noColumns; column++)
-                {
-                    if (GetIndexFromRowAndColumn(row, column, noColumns) == index)
-                        return (row, column);
-                }
-            }
-
-            return (-1, -1);
+            var row = System.Math.DivRem(index, noColumns, out int column);
+            return (row, column);            
         }
 
-        private static int GetIndexFromRowAndColumn(int row, int column, int noColumns)
-        {
-            return column + row * noColumns;
-        }
+        private static int GetIndexFromRowAndColumn(int row, int column, int noColumns) => column + row * noColumns;
 
         private void PopulateIndexModelFromMaze(IndexModel model, MazeModel maze)
         {

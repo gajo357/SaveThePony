@@ -41,20 +41,6 @@ namespace SaveThePony.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public IActionResult Contact()
-        {
-            var model = new ContactModel()
-            {
-                Name = "John Smith",
-                Github = @"https://github.com/",
-                StackOverflow = @"https://stackoverflow.com/",
-                LinkedIn = @"https://www.linkedin.com/"
-            };
-
-            return View(model);
-        }
-
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
