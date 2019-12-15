@@ -18,10 +18,10 @@ namespace SaveThePony.Services
         private const string BaseWebsite = @"https://ponychallenge.trustpilot.com";
         private const string ApiBaseWebsite = BaseWebsite + @"/pony-challenge/maze";
 
-        public MazeService(IPathFinderService pathFinderService)
+        public MazeService(IPathFinderService pathFinderService, IHttpClientFactory httpClientFactory)
         {
             PathFinderService = pathFinderService;
-            HttpClient = new HttpClient();
+            HttpClient = httpClientFactory.CreateClient();
             HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
@@ -30,7 +30,7 @@ namespace SaveThePony.Services
             if(!await CreateGameAsync(model))
                 return false;
 
-            var solution = await Task.Run(() => CreateNetworkFromMaze(model));
+            var solution = CreateNetworkFromMaze(model);
             if (solution == null)
             {
                 model.Messages = new List<string>() { "Could not find a solution for the maze" };
@@ -80,9 +80,7 @@ namespace SaveThePony.Services
                     var content = await response.Content.ReadAsStringAsync();
                     var state = JsonConvert.DeserializeObject<GameState>(content);
 
-                    model.Messages = new List<string>();
-                    model.Messages.Add(state.State);
-                    model.Messages.Add(state.StateResult);
+                    model.Messages = new List<string>() { state.State, state.StateResult };
 
                     return false;
                 }
